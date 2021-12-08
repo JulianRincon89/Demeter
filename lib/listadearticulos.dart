@@ -56,8 +56,8 @@ class _ListaCompraState extends State<ListaCompra> {
                     tt=int.parse(widget.lista[i][1]);
                     total=tt+total;
                     //print(total);
-                    Fluttertoast.showToast(msg: 'el valor de la compra es'+total.toString(),
-                    backgroundColor: Colors.indigo, fontSize: 25, toastLength: Toast.LENGTH_LONG,
+                    Fluttertoast.showToast(msg: 'el valor de la compra es'+' '+total.toString(),
+                    backgroundColor: Color.fromARGB(60, 145, 13, 53), fontSize: 25, toastLength: Toast.LENGTH_LONG,
                     textColor: Colors.white, gravity: ToastGravity.CENTER);
                   }
                 },
@@ -75,7 +75,7 @@ class _ListaCompraState extends State<ListaCompra> {
                           tt=int.parse(widget.lista[i][1]);
                           total=tt+total;
                           //print(total);
-                          Fluttertoast.showToast(msg: 'el valor de la compra es'+total.toString(),
+                          Fluttertoast.showToast(msg: 'el valor de la compra es '+total.toString(),
                               backgroundColor: Colors.indigo, fontSize: 25, toastLength: Toast.LENGTH_LONG,
                               textColor: Colors.white, gravity: ToastGravity.CENTER);
                         }
