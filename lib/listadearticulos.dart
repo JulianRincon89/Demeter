@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:tiendapp2/validationuserbuy.dart';
 
 import 'gestioncliente.dart';
 class ListaCompra extends StatefulWidget {
@@ -108,107 +109,129 @@ class _ListaCompraState extends State<ListaCompra> {
       ),
     );
   }
-}
+  void _HojaIngresoUsuario(context){
+    final usuario=TextEditingController();
+    final password=TextEditingController();
+    String usu='';
+    String pass='';
 
-void _HojaIngresoUsuario(context){
-  final usuario=TextEditingController();
-  final password=TextEditingController();
-  String usu='';
-  String pass='';
-
-  showModalBottomSheet(context: context, builder: (BuildContext bc){
-    return ListView(
-      children: [
-        Container(
-          padding: EdgeInsets.all(5),
-          alignment: Alignment.center,
-          child: Text('Identifícate para seguir comprando',
-            style:TextStyle(
-                fontSize: 20,
-                color: Colors.black,
-                fontWeight:FontWeight.bold ),
-          ),
-        ),
-        Container(
-          padding: EdgeInsets.only(left: 20, right: 20),
-          alignment: Alignment.center,
-          child: TextField(
-            style: TextStyle(color: Colors.black),
-            controller: usuario,
-            decoration: InputDecoration(
-              hintText: 'Usuario',
-              hintStyle: TextStyle(color: Colors.grey),
-            ),
-          ),
-        ),
-        Container(
-          padding: EdgeInsets.only(left: 20, right: 20),
-          alignment: Alignment.center,
-          child: TextField(
-            style: TextStyle(color: Colors.black),
-            controller: password,
-            decoration: InputDecoration(
-                hintText: 'Password',
-                hintStyle: TextStyle(color: Colors.black)
-            ),
-          ),
-        ),
-        Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, crossAxisAlignment: CrossAxisAlignment.center,
+    showModalBottomSheet(context: context, builder: (BuildContext bc){
+      return Container(
+        child: ListView(
           children: [
             Container(
-              //padding: EdgeInsets.only(left: 20, right: 20),
+              padding: EdgeInsets.all(5),
               alignment: Alignment.center,
-              child: ConstrainedBox(
-                constraints: BoxConstraints.tightFor(width: 100, height: 200),
-                child: ElevatedButton(
-                  style: TextButton.styleFrom(
-                    backgroundColor: Color.fromARGB(100, 119, 145, 13),
-                    shape: CircleBorder(),
-                  ),
-                  child: Text('Ingresar',
-                    style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.white
-                    ),
-                  ),
-                  onPressed: () {
-                    usu=usuario.text;
-                    pass=password.text;
-                    //print(usu+' '+ pass);
-                    if(usu=='pepe'&& pass=="123"){
-                      SnackBar respuesta = SnackBar(content: Text('Hello $usu'));
-                    }
-                  },
+              child: Text('Identifícate para seguir comprando',
+                style:TextStyle(
+                    fontSize: 20,
+                    color: Colors.black,
+                    fontWeight:FontWeight.bold ),
+              ),
+            ),
+            Container(
+             padding: EdgeInsets.only(left: 20, right: 20),
+              alignment: Alignment.center,
+              child: TextField(
+                style: TextStyle(color: Colors.black),
+                controller: usuario,
+                decoration: InputDecoration(
+                  hintText: 'Usuario',
+                  hintStyle: TextStyle(color: Colors.grey),
                 ),
               ),
             ),
             Container(
-              //padding: EdgeInsets.only(left: 20, right: 20),
+             padding: EdgeInsets.only(left: 20, right: 20),
               alignment: Alignment.center,
-              child: ConstrainedBox(
-                constraints: BoxConstraints.tightFor(width: 100, height: 200),
-                child: ElevatedButton(
-                  style: TextButton.styleFrom(
-                    backgroundColor: Color.fromARGB(100, 119, 145, 13),
-                    shape: CircleBorder(),
-
-                  ),
-                  child: Text('Registrar',
-                    style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.white
-                    ),
-                  ),
-                  onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context)=> GestionCliente()),
-                    );
-                  },
+              child: TextField(
+                style: TextStyle(color: Colors.black),
+                controller: password,
+                decoration: InputDecoration(
+                    hintText: 'Password',
+                    hintStyle: TextStyle(color: Colors.black)
                 ),
               ),
             ),
+            Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Container(
+                  //padding: EdgeInsets.only(left: 20, right: 20),
+                  alignment: Alignment.center,
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints.tightFor(width: 100, height: 200),
+                    child: ElevatedButton(
+                      style: TextButton.styleFrom(
+                        backgroundColor: Color.fromARGB(100, 119, 145, 13),
+                        shape: CircleBorder(),
+                      ),
+                      child: Text('Ingresar',
+                        style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.white
+                        ),
+                      ),
+                      onPressed: () {
+                        usu=usuario.text;
+                        pass=password.text;
+                        //print(usu+' '+ pass);
+                        if(usu=='pepe'&& pass=="123"){
+                          Navigator.of(context).pop();
+                          Fluttertoast.showToast(msg: 'Bienvenido $usu', toastLength: Toast.LENGTH_SHORT, gravity: ToastGravity.TOP, textColor: Colors.black);
+                          total=0;
+                          int tt;
+                          for(int i=0; i<widget.lista.length; i++){
+                            tt=int.parse(widget.lista[i][1]);
+                            total=tt+total;
+                            //print(total);
+                            Fluttertoast.showToast(msg: 'el valor de la compra es '+total.toString(),
+                                backgroundColor: Color.fromARGB(60, 145, 13, 53), fontSize: 25, toastLength: Toast.LENGTH_LONG,
+                                textColor: Colors.white, gravity: ToastGravity.CENTER);
+                          }
+                          List listadecompra=[];
+                          for(int i=0; i<widget.lista.length; i++){
+                            listadecompra.add(widget.lista[i][0]);
+                          }
+                          //el doc, mandamos el documento que nos sirve como clave en nuestra base de datos.
+                          datoscompra.doc().set({
+                            'Producto': listadecompra,
+                            'Valor compra': total,
+                          });
+                        }
+                        else{
+                          Navigator.pop(context);
+                          Navigator.push(context, MaterialPageRoute(builder: (context)=> Inscripcioncustombuy()));
+                          total=0;
+                          int tt;
+                          for(int i=0; i<widget.lista.length; i++){
+                            tt=int.parse(widget.lista[i][1]);
+                            total=tt+total;
+                            //print(total);
+                            Fluttertoast.showToast(msg: 'el valor de la compra es '+total.toString(),
+                                backgroundColor: Color.fromARGB(60, 145, 13, 53), fontSize: 25, toastLength: Toast.LENGTH_LONG,
+                                textColor: Colors.white, gravity: ToastGravity.CENTER);
+                          }
+                          List listadecompra=[];
+                          for(int i=0; i<widget.lista.length; i++){
+                            listadecompra.add(widget.lista[i][0]);
+                          }
+                          //el doc, mandamos el documento que nos sirve como clave en nuestra base de datos.
+                          datoscompra.doc().set({
+                            'Producto': listadecompra,
+                            'Valor compra': total,
+                          });
+                        }
+
+                      },
+                    ),
+                  ),
+                ),
+              ],
+            )
           ],
-        )
-      ],
-    );
-  });
+        ),
+      );
+    });
   }
+}
+
