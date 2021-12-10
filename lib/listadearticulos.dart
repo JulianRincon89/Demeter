@@ -1,11 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:tiendapp2/validationuserbuy.dart';
 
-import 'gestioncliente.dart';
 class ListaCompra extends StatefulWidget {
   List lista=[];
   ListaCompra({required this.lista});
@@ -14,10 +12,34 @@ class ListaCompra extends StatefulWidget {
 }
 
 class _ListaCompraState extends State<ListaCompra> {
-
-
   var total;
   CollectionReference datoscompra=FirebaseFirestore.instance.collection('pedidos');
+  Future<dynamic> createAlertDialog(BuildContext context){
+    TextEditingController direccion= new TextEditingController();
+    return showDialog(context: context, builder: (context){
+      return AlertDialog(
+        title: Text('¿Desea ingresar la dirección de envío?', style: TextStyle(fontSize: 13),),
+        content: TextField(
+          decoration: InputDecoration(hintText: 'Ingrese aquí su dirección', hintStyle: const TextStyle(color: Colors.black, fontSize: 12),
+            enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.black54, width: 3),
+                borderRadius: BorderRadius.all(Radius.circular(10))),
+            helperText: "Haga clic fuera del globo si no es así.",
+            focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color.fromARGB(60, 156, 43, 18), width: 2),
+                borderRadius: BorderRadius.all(Radius.circular(20))),
+          ),
+          controller: direccion,
+        ),
+        actions: [
+          MaterialButton(
+              elevation: 2.0,
+              child: Text('Enviar'),
+              onPressed: (){
+                Navigator.of(context).pop(direccion.text.toString());
+              })
+        ],
+      );
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,7 +63,6 @@ class _ListaCompraState extends State<ListaCompra> {
                 key:Key(item),
                     child: ListTile(
                       title: Text(widget.lista[i][0]+ " "+widget.lista[i][1]),
-                      //subtitle: Text(widget.lista[i]),
                     ), background: Container(color: Colors.black,),
 
 
@@ -174,59 +195,77 @@ class _ListaCompraState extends State<ListaCompra> {
                       onPressed: () {
                         usu=usuario.text;
                         pass=password.text;
-                        //print(usu+' '+ pass);
-                        if(usu=='pepe'&& pass=="123"){
-                          Navigator.of(context).pop();
-                          Fluttertoast.showToast(msg: 'Bienvenido $usu', toastLength: Toast.LENGTH_SHORT, gravity: ToastGravity.TOP, textColor: Colors.black);
-                          total=0;
-                          int tt;
-                          for(int i=0; i<widget.lista.length; i++){
-                            tt=int.parse(widget.lista[i][1]);
-                            total=tt+total;
-                            //print(total);
-                            Fluttertoast.showToast(msg: 'el valor de la compra es '+total.toString(),
-                                backgroundColor: Color.fromARGB(60, 145, 13, 53), fontSize: 25, toastLength: Toast.LENGTH_LONG,
-                                textColor: Colors.white, gravity: ToastGravity.CENTER);
-                          }
-                          List listadecompra=[];
-                          for(int i=0; i<widget.lista.length; i++){
-                            listadecompra.add(widget.lista[i][0]);
-                          }
-                          //el doc, mandamos el documento que nos sirve como clave en nuestra base de datos.
-                          datoscompra.doc().set({
-                            'Producto': listadecompra,
-                            'Valor compra': total,
-                          });
-                        }
-                        else{
-                          Navigator.pop(context);
-                          Navigator.push(context, MaterialPageRoute(builder: (context)=> Inscripcioncustombuy()));
-                          total=0;
-                          int tt;
-                          for(int i=0; i<widget.lista.length; i++){
-                            tt=int.parse(widget.lista[i][1]);
-                            total=tt+total;
-                            //print(total);
-                            Fluttertoast.showToast(msg: 'el valor de la compra es '+total.toString(),
-                                backgroundColor: Color.fromARGB(60, 145, 13, 53), fontSize: 25, toastLength: Toast.LENGTH_LONG,
-                                textColor: Colors.white, gravity: ToastGravity.CENTER);
-                          }
-                          List listadecompra=[];
-                          for(int i=0; i<widget.lista.length; i++){
-                            listadecompra.add(widget.lista[i][0]);
-                          }
-                          //el doc, mandamos el documento que nos sirve como clave en nuestra base de datos.
-                          datoscompra.doc().set({
-                            'Producto': listadecompra,
-                            'Valor compra': total,
-                          });
-                        }
+                        String domicilio=" ";
+                        createAlertDialog(context).then((onValue){
+                          if(onValue!=null){
+                            SnackBar mySnackBar = SnackBar(content: Text('Se enviará a $onValue'));
+                            ScaffoldMessenger.of(context).showSnackBar(mySnackBar);
+                            domicilio=onValue;
+                            if(usu=='pepe'&& pass=="123"){
+                              Navigator.of(context).pop();
+                              Fluttertoast.showToast(msg: 'Bienvenido $usu', toastLength: Toast.LENGTH_SHORT, gravity: ToastGravity.TOP, textColor: Colors.green);
 
+                              total=0;
+                              int tt;
+                              for(int i=0; i<widget.lista.length; i++){
+                                tt=int.parse(widget.lista[i][1]);
+                                total=tt+total;
+                                //print(total);
+                                Fluttertoast.showToast(msg: 'Compra registrada, el valor fue de '+total.toString(),
+                                    backgroundColor: Color.fromARGB(60, 145, 13, 53), fontSize: 25, toastLength: Toast.LENGTH_LONG,
+                                    textColor: Colors.white, gravity: ToastGravity.CENTER);
+                              }
+                              List listadecompra=[];
+                              for(int i=0; i<widget.lista.length; i++){
+                                listadecompra.add(widget.lista[i][0]);
+                              }
+                              //el doc, mandamos el documento que nos sirve como clave en nuestra base de datos.
+                              datoscompra.doc().set({
+                                'Producto': listadecompra,
+                                'Valor compra': total,
+                                'Direccion de envio': domicilio,
+                              });
+                            }else{
+                              Navigator.pop(context);
+                              Navigator.push(context, MaterialPageRoute(builder: (context)=> Inscripcioncustombuy()));
+                            }
+                          }else{
+                            SnackBar mySnackBar = SnackBar(content: Text('Se recogerá en oficina'));
+                            ScaffoldMessenger.of(context).showSnackBar(mySnackBar);
+                            if(usu=='pepe'&& pass=="123"){
+                              Navigator.of(context).pop();
+                              Fluttertoast.showToast(msg: 'Bienvenido $usu', toastLength: Toast.LENGTH_SHORT, gravity: ToastGravity.TOP, textColor: Colors.green);
+                              total=0;
+                              int tt;
+                              for(int i=0; i<widget.lista.length; i++){
+                                tt=int.parse(widget.lista[i][1]);
+                                total=tt+total;
+                                //print(total);
+                                Fluttertoast.showToast(msg: 'Compra registrada, el valor fue de '+total.toString(),
+                                    backgroundColor: Color.fromARGB(60, 145, 13, 53), fontSize: 25, toastLength: Toast.LENGTH_LONG,
+                                    textColor: Colors.white, gravity: ToastGravity.CENTER);
+                              }
+                              List listadecompra=[];
+                              for(int i=0; i<widget.lista.length; i++){
+                                listadecompra.add(widget.lista[i][0]);
+                              }
+                              //el doc, mandamos el documento que nos sirve como clave en nuestra base de datos.
+                              datoscompra.doc().set({
+                                'Producto': listadecompra,
+                                'Valor compra': total,
+                                'Direccion de envio': domicilio,
+                              });
+                            }else{
+                              Navigator.pop(context);
+                              Navigator.push(context, MaterialPageRoute(builder: (context)=> Inscripcioncustombuy()));
+                            }
+                          };
+                        //print(usu+' '+ pass);
                       },
-                    ),
-                  ),
+                    );
+                  }),
                 ),
-              ],
+                )],
             )
           ],
         ),
