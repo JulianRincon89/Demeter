@@ -88,7 +88,7 @@ class BuscarNegocio extends StatelessWidget {
                     DataColumn(label: Text('precio')),
                   ],
                       rows: [
-                       DataRow(cells: [
+                       DataRow(selected: true, cells: [
                          DataCell(Text(data['nombre']), onTap: (){
                            lista.add([data['nombre'],data['precio']]);
                            print(lista);
@@ -99,8 +99,9 @@ class BuscarNegocio extends StatelessWidget {
                            print(lista);
                          },
                          ),
-                       ])
-                      ]);/*Column(
+                       ],
+                       )
+                      ],columnSpacing: 10, dataTextStyle: TextStyle(fontSize: 15, color: Colors.black));/*Column(
                   children: [
                     Container(
                       decoration: BoxDecoration(
