@@ -1,8 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'dart:convert';
 
 import 'package:tiendapp2/detallenegocio.dart';
 import 'package:tiendapp2/menuprincipal.dart';
@@ -47,7 +45,7 @@ class _ConsultanegociosState extends State<Consultanegocios> {
         }
         return ListView(
           children: snapshot.data!.docs.map((DocumentSnapshot document){
-            Map<String, dynamic> data=document.data()! as Map<String,dynamic>;
+            Map<dynamic, dynamic> data=document.data()! as Map<dynamic,dynamic>;
             return Container(
               child: DataTable(
 
@@ -58,7 +56,7 @@ class _ConsultanegociosState extends State<Consultanegocios> {
                 ],
                 rows: [
                   DataRow(cells: [
-                    DataCell(Image.network(data['img'], width: 50,), onTap: (){Cliente cli=Cliente(data['nombre'], data['web'], data['img'], data['celular'], data['direccion'], data['categoria']);
+                    DataCell(Image.network(data['img'], width: 50,), onTap: (){Cliente cli=Cliente(data['nombre'], data['web'], data['img'], data['celular'], data['direccion'], data['categoria'], data['Latitud'], data['Longitud']);
               Navigator.push(context, MaterialPageRoute(builder: (context)=> Detallenegocio(cliente:cli)));}),
                     DataCell(Text(data['nombre'], style: TextStyle(fontSize: 13))),
                     DataCell(Text(data['categoria'])),] ),
@@ -81,6 +79,8 @@ class Cliente{
   String celular="";
   String direccion="";
   String categoria="";
+  String latitud="";
+  String longitud="";
 
-  Cliente(this.nombre, this.web, this.imagen, this.celular, this.direccion, this.categoria);
+  Cliente(this.nombre, this.web, this.imagen, this.celular, this.direccion, this.categoria, this.latitud, this.longitud);
 }

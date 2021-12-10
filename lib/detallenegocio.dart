@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:tiendapp2/registronegocios.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import 'homepage.dart';
+
 class Detallenegocio extends StatefulWidget {
   final Cliente cliente;
   const Detallenegocio({required this.cliente});
@@ -61,7 +63,16 @@ class _DetallenegocioState extends State<Detallenegocio> {
                       [
                         DataRow(cells: [DataCell(Text('Categoria', style: TextStyle(color: Colors.white),)), DataCell(Text(widget.cliente.categoria, style: TextStyle(color: Colors.white)))]),
                         DataRow(cells: [DataCell(Text('Celular', style: TextStyle(color: Colors.white))), DataCell(Text(widget.cliente.celular, style: TextStyle(color: Colors.white)))]),
-                        DataRow(cells: [DataCell(Text('Dirección', style: TextStyle(color: Colors.white))), DataCell(Text(widget.cliente.direccion, style: TextStyle(color: Colors.white)))]),
+                        DataRow(cells: [DataCell(Text('Dirección', style: TextStyle(color: Colors.white))), DataCell(Text(widget.cliente.direccion, style: TextStyle(color: Colors.white))
+                        ,onTap: ()async{
+                          var la=widget.cliente.latitud;
+                          var lo=widget.cliente.latitud;
+                          var one=double.parse(la);
+                          var two=double.parse(lo);
+                          Direccion dir=Direccion(one, two);
+                          Navigator.push(context, MaterialPageRoute(builder: (context)=>Geolocalizacion(direccion:dir)),
+                          );
+                            })]),
                       ],
                   ),
                   ],
@@ -72,4 +83,11 @@ class _DetallenegocioState extends State<Detallenegocio> {
           )
       );
   }
+}
+
+class Direccion {
+  double latitud;
+  double longitud;
+  Direccion(this.latitud, this.longitud);
+
 }
