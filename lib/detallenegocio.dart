@@ -66,10 +66,10 @@ class _DetallenegocioState extends State<Detallenegocio> {
                         DataRow(cells: [DataCell(Text('Dirección', style: TextStyle(color: Colors.white))), DataCell(Text(widget.cliente.direccion, style: TextStyle(color: Colors.white))
                         ,onTap: ()async{
                           var la=widget.cliente.latitud;
-                          var lo=widget.cliente.latitud;
+                          var lo=widget.cliente.longitud;
                           var one=double.parse(la);
                           var two=double.parse(lo);
-                          Direccion dir=Direccion(one, two);
+                          Direccion dir=Direccion(one, two, widget.cliente.nombre, widget.cliente.direccion);
                           Navigator.push(context, MaterialPageRoute(builder: (context)=>Geolocalizacion(direccion:dir)),
                           );
                             })]),
@@ -88,6 +88,8 @@ class _DetallenegocioState extends State<Detallenegocio> {
 class Direccion {
   double latitud;
   double longitud;
-  Direccion(this.latitud, this.longitud);
+  String negocio;
+  String dire;
+  Direccion(this.latitud, this.longitud, this.negocio, this.dire);
 
 }
